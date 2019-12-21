@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 import * as courseApi from "../../api/courseApi";
-import { beginApiCall } from "./apiStatusActions";
+import { beginApiCall, apiCallError } from "./apiStatusActions";
 
 export function loadCourseSuccess(courses) {
   return { type: types.LOAD_COURSES_SUCCESS, courses };
@@ -24,6 +24,7 @@ export function loadCourses() {
         dispatch(loadCourseSuccess(courses));
       })
       .catch(error => {
+        dispatch(apiCallError(error));
         throw error;
       });
   };
@@ -42,6 +43,9 @@ export function saveCourse(course) {
           : dispatch(createCourseSuccess(course));
       })
       .catch(error => {
+        // Redux isn't being notified that the API is completed if the API fails
+        // need to fix that - dispatch action when API call fails
+        dispatch(apiCallError(error));
         throw error;
       });
   };

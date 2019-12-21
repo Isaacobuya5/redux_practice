@@ -58,10 +58,17 @@ function ManageCoursesPage({
   function handleSave(event) {
     event.preventDefault();
     setSaving(true);
-    saveCourse(course).then(() => {
-      toast.success("Course Saved");
-      history.push("/courses");
-    }); // This is passed in on props, so it is already bound to dispatch
+    saveCourse(course)
+      .then(() => {
+        toast.success("Course Saved");
+        history.push("/courses");
+      })
+      .catch(error => {
+        // incase of an error re-enable the save button to allow user to try again
+        setSaving(false);
+        setErrors({ onSave: error.message });
+      });
+    // This is passed in on props, so it is already bound to dispatch
   }
 
   return authors.length === 0 || courses.length === 0 ? (

@@ -5,3 +5,4 @@ export const CREATE_COURSE_SUCCESS = "CREATE_COURSE_SUCCESS";
 export const UPDATE_COURSE_SUCCESS = "UPDATE_COURSE_SUCCESS";
 // we need to keep track of when API call begin
 export const BEGIN_API_CALL = "BEGIN_API_CALL";
+export const API_CALL_ERROR = "API_CALL_ERROR";
