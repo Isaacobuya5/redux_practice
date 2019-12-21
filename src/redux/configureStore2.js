@@ -2,9 +2,6 @@ import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "./reducers";
 import reduxImutableStateInvariant from "redux-immutable-state-invariant";
 
-// we need to import redux thunk to handle asynchronous request
-import thunk from "redux-thunk";
-
 export default function configureStore(initialState) {
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // Adds support for redux devTools
@@ -12,7 +9,7 @@ export default function configureStore(initialState) {
   return createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(thunk, reduxImutableStateInvariant()))
+    composeEnhancers(applyMiddleware(reduxImutableStateInvariant()))
   );
 }
 // Redux middleware is a way to enhance Redux behaviour
