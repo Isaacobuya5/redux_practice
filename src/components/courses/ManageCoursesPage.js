@@ -8,6 +8,9 @@ import PropTypes from "prop-types";
 import CourseForm from "./CourseForm";
 // we need an empty course structure to get us started
 import { newCourse } from "../../tools/mockData";
+import Spinner from "../common/Spinner";
+// toast is the method we will call to display toas
+import { toast } from "react-toastify";
 
 // ...otherProps; rest operator allows us to assign any props i haven't destructured on the left to a variable called on otherProps
 function ManageCoursesPage({
@@ -23,7 +26,8 @@ function ManageCoursesPage({
   const [course, setCourse] = useState({ ...otherProps.course });
   // initialize state for errors
   const [errors, setErrors] = useState({}); // initalize errors to an empty object
-
+  // add another state
+  const [saving, setSaving] = useState(false);
   // useEffect, same as componentDidMount for classes
   useEffect(() => {
     if (courses.length === 0) {
@@ -53,18 +57,23 @@ function ManageCoursesPage({
 
   function handleSave(event) {
     event.preventDefault();
+    setSaving(true);
     saveCourse(course).then(() => {
+      toast.success("Course Saved");
       history.push("/courses");
     }); // This is passed in on props, so it is already bound to dispatch
   }
 
-  return (
+  return authors.length === 0 || courses.length === 0 ? (
+    <Spinner />
+  ) : (
     <CourseForm
       course={course}
       errors={errors}
       authors={authors}
       onChange={handleChange}
       onSave={handleSave}
+      saving={saving}
     />
   );
 }
