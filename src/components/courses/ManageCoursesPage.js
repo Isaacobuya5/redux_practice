@@ -31,6 +31,7 @@ function ManageCoursesPage({
         alert("Loading courses failed " + error);
       });
     } else {
+      // copies a new course passed in on props to state any time a new course is passed in
       setCourse({ ...otherProps.course });
     }
 
@@ -41,7 +42,7 @@ function ManageCoursesPage({
     }
   }, [otherProps.course]);
   // Declaring empty array as a second arguement to effect means the effect will run once when the component mounts
-
+  // we want it to run any time any a new course is passed in on props
   function handleChange(event) {
     const { name, value } = event.target;
     setCourse(prevCourse => ({
@@ -79,12 +80,27 @@ ManageCoursesPage.propTypes = {
   history: PropTypes.object.isRequired
 };
 
+// get a particular course based on slug
+// This function is normally called a selector -> because it selcts data from the redux store
+export function getCourseBySlug(courses, slug) {
+  return courses.find(course => course.slug === slug) || null;
+}
+
 // this function determines what part of the state we expose to our components via props
 
-function mapStateToProps(state) {
+// NOTE -> We need a way to add exising form items to a form field when we need to edit
+// second mapToState properties called ownProps is needed for this
+// we can use this to read the URL data injected on props by React Router
+function mapStateToProps(state, ownProps) {
+  const slug = ownProps.match.params.slug;
+  // Next -> goal is now to populate the course object based on the URL or empty course otherwise
+  const course =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+      : newCourse;
   return {
     // pass the newCourse we got above on props
-    course: newCourse,
+    course,
     courses: state.courses,
     authors: state.authors
   };
