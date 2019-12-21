@@ -10,6 +10,8 @@ import CourseList from "./CourseList";
 // handling redirects with react router
 import { Redirect } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import { deleteCourse } from "../../api/courseApi";
+import { toast } from "react-toastify";
 
 class CoursesPage extends React.Component {
   state = {
@@ -29,6 +31,15 @@ class CoursesPage extends React.Component {
       });
     }
   }
+
+  handleDeleteCourse = async course => {
+    toast.success("Course deleted succesfully");
+    try {
+      await this.props.actions.deleteCourse(course);
+    } catch (error) {
+      toast.error("Delete failed. " + error.message, { autoClose: false });
+    }
+  };
   render() {
     return (
       <>
@@ -46,7 +57,10 @@ class CoursesPage extends React.Component {
             >
               Add Course
             </button>
-            <CourseList courses={this.props.courses} />
+            <CourseList
+              onDeleteClick={this.handleDeleteCourse}
+              courses={this.props.courses}
+            />
           </>
         )}
       </>
@@ -105,7 +119,8 @@ function mapDispatchToProps(dispatch) {
     // above is still verbose thus the need for method 3
     actions: {
       loadCourses: bindActionCreators(courseActions.loadCourses, dispatch),
-      loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch)
+      loadAuthors: bindActionCreators(authorActions.loadAuthors, dispatch),
+      deleteCourse: bindActionCreators(courseActions.deleteCourse, dispatch)
     }
   };
 }
